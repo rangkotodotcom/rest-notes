@@ -10,8 +10,10 @@ var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
     // Save User to Database
+    res.setHeader('Content-Type', 'application/json');
+    const userId = uuidv4();
     User.create({
-        id: uuidv4(),
+        id: userId,
         name: req.body.name,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password, 8)
@@ -19,18 +21,12 @@ exports.signup = (req, res) => {
         var success = 0;
         if (req.body.roles) {
             for (let i = 0; i < req.body.roles.length; i++) {
-                Role.findOne({
-                    where: {
-                        id: req.body.roles[i]
-                    }
-                }).then(roles => {
-                    UserRole.create({
-                        id: uuidv4(),
-                        userId: user.id,
-                        roleId: req.body.roles[i]
-                    }).then(() => {
-                        success++;
-                    });
+                UserRole.create({
+                    id: uuidv4(),
+                    userId: userId,
+                    roleId: req.body.roles[i]
+                }).then(() => {
+                    success++;
                 });
             }
         } else {
@@ -39,9 +35,9 @@ exports.signup = (req, res) => {
 
 
         if (success > 0) {
-            res.status(201).json({ message: "User was registered successfully!" });
+            return res.status(201).json({ message: "User was registered successfully!" });
         } else {
-            res.status(201).json({ message: "User was registered successfully!" });
+            return res.status(400).json({ message: "Failed to registered user!" });
         }
     }).catch(err => {
         res.status(500).json({ message: err.message });
