@@ -39,12 +39,12 @@ exports.signup = (req, res) => {
 
 
         if (success > 0) {
-            res.status(201).send({ message: "User was registered successfully!" });
+            res.status(201).json({ message: "User was registered successfully!" });
         } else {
-            res.status(201).send({ message: "User was registered successfully!" });
+            res.status(201).json({ message: "User was registered successfully!" });
         }
     }).catch(err => {
-        res.status(500).send({ message: err.message });
+        res.status(500).json({ message: err.message });
     });
 };
 
@@ -55,7 +55,7 @@ exports.signin = (req, res) => {
         }
     }).then(user => {
         if (!user) {
-            return res.status(404).send({ message: "User Not found." });
+            return res.status(404).json({ message: "User Not found." });
         }
 
         var passwordIsValid = bcrypt.compareSync(
@@ -64,7 +64,7 @@ exports.signin = (req, res) => {
         );
 
         if (!passwordIsValid) {
-            return res.status(401).send({
+            return res.status(401).json({
                 accessToken: null,
                 message: "Invalid Password!"
             });
@@ -79,11 +79,11 @@ exports.signin = (req, res) => {
             });
 
         var authorities = [];
-        user.getRoles().then(roles => {
+        user.getUserRoles().then(roles => {
             for (let i = 0; i < roles.length; i++) {
                 authorities.push("ROLE_" + roles[i].name.toUpperCase());
             }
-            res.status(200).send({
+            res.status(200).json({
                 id: user.id,
                 name: user.name,
                 email: user.email,
@@ -92,6 +92,6 @@ exports.signin = (req, res) => {
             });
         });
     }).catch(err => {
-        res.status(500).send({ message: err.message });
+        res.status(500).json({ message: err.message });
     });
 };
