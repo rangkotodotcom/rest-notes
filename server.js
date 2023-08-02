@@ -18,31 +18,6 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// Untuk Mode Development
-// db.sequelize.sync({ force: true }).then(() => {
-//     console.log('Drop and Resync Db');
-//     initial();
-// });
-
-// Untuk Mode Production
-// db.sequelize.sync();
-
-// function initial() {
-//     Role.create({
-//         id: 1,
-//         name: "admin"
-//     });
-
-//     Role.create({
-//         id: 2,
-//         name: "manager"
-//     });
-
-//     Role.create({
-//         id: 3,
-//         name: "user"
-//     });
-// }
 
 // simple route
 app.get("/", (req, res) => {
